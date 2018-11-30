@@ -26,6 +26,7 @@ android {
 
 dependencies {
     compileOnly "com.android.support:appcompat-v7:${android_support_version}"
+    compileOnly "com.android.support:support-v4:${android_support_version}"
     compileOnly "android.arch.lifecycle:extensions:${libs.androidLifecycle}"
 
     testImplementation "junit:junit:${libs.junit}"
