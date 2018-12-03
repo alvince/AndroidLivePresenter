@@ -23,22 +23,36 @@
 package me.alvince.arch.livepresenter;
 
 import android.arch.lifecycle.LifecycleOwner;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.SparseArray;
 
+import java.util.Arrays;
+
 /**
  * Created by alvince on 2018/11/30
  *
  * @author alvince.zy@gmail.com
- * @version 0.1.0, 2018/11/30
+ * @version 0.1.0, 2018/12/3
  * @since 0.1.0
  */
 public class LivePresenterStores {
 
+    private static final long HANDLE_GC_DELAYED = 3000L;
+
+    private static final int HANDLE_GC_PERFORM = 772;
+    private static final int HANDLE_GC_POST = 198;
+
+    private static boolean sGarbage = false;
+    private static int[] sStoresKeyArr = new int[16];
     private static SparseArray<LivePresenterStore> sStoresArray;
+
+    private static Handler sStoresHandler = new StoresHandler();
 
     private LivePresenterStores() {
         sStoresArray = new SparseArray<>();
@@ -62,9 +76,79 @@ public class LivePresenterStores {
         return ofLifecycle(fragment);
     }
 
+    static void gc() {
+        if (sStoresArray.size() > 0) {
+            sStoresHandler.sendEmptyMessage(HANDLE_GC_POST);
+        }
+    }
+
     private static LivePresenterStore ofLifecycle(LifecycleOwner owner) {
         LivePresenterStore store = new LivePresenterStore(owner);
         sStoresArray.put(owner.hashCode(), store);
+        putInstance(owner.hashCode(), store);
         return store;
+    }
+
+    private static void putInstance(int key, LivePresenterStore instance) {
+        int curSize = sStoresArray.size();
+
+        // garbage clear
+        if (sGarbage) {
+            int[] swap = new int[(int) (curSize * 1.5F)];
+            int pos = 0;
+            for (int k : sStoresKeyArr) {
+                LivePresenterStore s = sStoresArray.get(k);
+                if (s != null) {
+                    swap[pos++] = k;
+                }
+            }
+            sStoresKeyArr = swap;
+            sGarbage = false;
+        }
+
+        // Expand capacity
+        if (sStoresKeyArr.length == curSize) {
+            sStoresKeyArr = Arrays.copyOf(sStoresKeyArr, (int) (curSize * 1.5F));
+        }
+
+        sStoresArray.put(key, instance);
+        sStoresKeyArr[curSize] = key;
+    }
+
+    private static void performGC() {
+        if (sStoresArray.size() > 0) {
+            for (int i = 0; i < sStoresKeyArr.length; i++) {
+                int k = sStoresKeyArr[i];
+                LivePresenterStore store = sStoresArray.get(k);
+                if (store != null && !store.isActived()) {
+                    sStoresArray.remove(k);
+                    sStoresKeyArr[i] = 0;
+                    sGarbage = true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Stores internal handler
+     */
+    private static class StoresHandler extends Handler {
+        StoresHandler() {
+            super(Looper.getMainLooper());
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLE_GC_POST:
+                    removeCallbacksAndMessages(null);
+                    sendEmptyMessageDelayed(HANDLE_GC_PERFORM, HANDLE_GC_DELAYED);
+                    break;
+                case HANDLE_GC_PERFORM:
+                    performGC();
+                default:
+            }
+        }
     }
 }

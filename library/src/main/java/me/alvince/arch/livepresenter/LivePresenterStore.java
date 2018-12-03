@@ -33,17 +33,25 @@ import java.util.HashMap;
  * Created by alvince on 2018/11/30
  *
  * @author alvince.zy@gmail.com
- * @version 0.1.0, 2018/11/30
+ * @version 0.1.0, 2018/12/3
  * @since 0.1.0
  */
 public class LivePresenterStore {
 
     private final HashMap<String, LivePresenter> mMap = new HashMap<>();
 
+    private boolean mLifecycleSubscribed = false;
     private LifecycleObserver mLifecycleObserver;
 
     LivePresenterStore(LifecycleOwner owner) {
         observeLifecycle(owner);
+    }
+
+    /**
+     * Check if current actived for observe relevant {@link LifecycleOwner}
+     */
+    public boolean isActived() {
+        return mLifecycleSubscribed;
     }
 
     final void put(String key, LivePresenter presenter) {
@@ -75,13 +83,27 @@ public class LivePresenterStore {
                 public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
                     switch (event) {
                         case ON_DESTROY:
-                            source.getLifecycle().removeObserver(this);
+                            attachToLifecycleOwner(source.getLifecycle(), this, false);
                             clear();
+                            LivePresenterStores.gc();
                         default:
                     }
                 }
             };
         }
-        lifecycleOwner.getLifecycle().addObserver(mLifecycleObserver);
+        attachToLifecycleOwner(lifecycleOwner.getLifecycle(), mLifecycleObserver, true);
+    }
+
+    private void attachToLifecycleOwner(Lifecycle lifecycle, LifecycleObserver observer, boolean observe) {
+        if (observe) {
+            lifecycle.addObserver(observer);
+            mLifecycleSubscribed = true;
+            return;
+        }
+
+        if (mLifecycleSubscribed && observer != null) {
+            lifecycle.removeObserver(observer);
+            mLifecycleSubscribed = false;
+        }
     }
 }
