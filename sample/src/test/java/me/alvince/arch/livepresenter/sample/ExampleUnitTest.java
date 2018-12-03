@@ -1,4 +1,4 @@
-package me.alvince.arch.livepresenter;
+package me.alvince.arch.livepresenter.sample;
 
 import org.junit.Test;
 

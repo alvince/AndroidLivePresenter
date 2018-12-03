@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "me.alvince.arch.livepresenter"
+        applicationId "me.alvince.arch.livepresenter.sample"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode cfg.versionCode
+        versionName "$version_name"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,10 +21,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${android_support_version}"
-    implementation "android.arch.lifecycle:extensions:${libs.androidLifecycle}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "${depends.supportCompat}"
+    implementation "${depends.androidLifecycle}"
+    implementation "${depends.leakCanary}"
 
     testImplementation "junit:junit:${libs.junit}"
-    androidTestImplementation "com.android.support.test:runner:${libs.supportTest}"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${libs.espresso}"
+    androidTestImplementation "${depends.supportTest}"
+    androidTestImplementation "${depends.espressoCore}"
+}
+
+repositories {
+    mavenCentral()
 }

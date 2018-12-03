@@ -2,6 +2,7 @@
     package="me.alvince.arch.livepresenter">
 
     <application
+        android:name=".sample.SampleApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
