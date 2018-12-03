@@ -26,6 +26,8 @@ dependencies {
     implementation "${depends.androidLifecycle}"
     implementation "${depends.leakCanary}"
 
+    implementation project(':library')
+
     testImplementation "junit:junit:${libs.junit}"
     androidTestImplementation "${depends.supportTest}"
     androidTestImplementation "${depends.espressoCore}"
