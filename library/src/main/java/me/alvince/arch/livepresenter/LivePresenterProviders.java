@@ -53,7 +53,7 @@ public class LivePresenterProviders {
     public static LivePresenterProvider of(@NonNull FragmentActivity activity, @Nullable Factory factory) {
         Application application = checkApplication(activity);
         if (factory == null) {
-            factory = LivePresenterProvider.AndroidViewModelFactory.getInstance(application);
+            factory = LivePresenterProvider.AndroidLivePresenterFactory.getInstance(application);
         }
         return new LivePresenterProvider(LivePresenterStores.of(activity), factory);
     }
@@ -69,7 +69,7 @@ public class LivePresenterProviders {
     public static LivePresenterProvider of(@NonNull Fragment fragment, @Nullable Factory factory) {
         Application application = checkApplication(checkActivity(fragment));
         if (factory == null) {
-            factory = LivePresenterProvider.AndroidViewModelFactory.getInstance(application);
+            factory = LivePresenterProvider.AndroidLivePresenterFactory.getInstance(application);
         }
         return new LivePresenterProvider(LivePresenterStores.of(fragment), factory);
     }

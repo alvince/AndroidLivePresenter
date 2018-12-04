@@ -38,7 +38,7 @@ import java.util.Arrays;
  * Created by alvince on 2018/11/30
  *
  * @author alvince.zy@gmail.com
- * @version 0.1.0, 2018/12/3
+ * @version 0.1.0, 2018/12/4
  * @since 0.1.0
  */
 public class LivePresenterStores {
@@ -49,13 +49,13 @@ public class LivePresenterStores {
     private static final int HANDLE_GC_POST = 198;
 
     private static boolean sGarbage = false;
+
     private static int[] sStoresKeyArr = new int[16];
-    private static SparseArray<LivePresenterStore> sStoresArray;
+    private static SparseArray<LivePresenterStore> sStoresArray = new SparseArray<>();
 
     private static Handler sStoresHandler = new StoresHandler();
 
     private LivePresenterStores() {
-        sStoresArray = new SparseArray<>();
     }
 
     /**

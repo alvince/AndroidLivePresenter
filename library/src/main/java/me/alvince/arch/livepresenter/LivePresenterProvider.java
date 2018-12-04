@@ -117,20 +117,20 @@ public class LivePresenterProvider {
     /**
      * {@link Factory} which may create {@link LivePresenter}, which have an empty constructor.
      */
-    public static class AndroidViewModelFactory extends LivePresenterProvider.NewInstanceFactory {
+    public static class AndroidLivePresenterFactory extends LivePresenterProvider.NewInstanceFactory {
 
-        private static AndroidViewModelFactory sInstance;
+        private static AndroidLivePresenterFactory sInstance;
 
         /**
-         * Retrieve a singleton instance of AndroidViewModelFactory.
+         * Retrieve a singleton instance of AndroidLivePresenterFactory.
          *
          * @param application an application to pass in {@link LivePresenter}
-         * @return A valid {@link AndroidViewModelFactory}
+         * @return A valid {@link AndroidLivePresenterFactory}
          */
         @NonNull
-        public static AndroidViewModelFactory getInstance(@NonNull Application application) {
+        public static AndroidLivePresenterFactory getInstance(@NonNull Application application) {
             if (sInstance == null) {
-                sInstance = new AndroidViewModelFactory(application);
+                sInstance = new AndroidLivePresenterFactory(application);
             }
             return sInstance;
         }
@@ -138,18 +138,18 @@ public class LivePresenterProvider {
         private Application mApplication;
 
         /**
-         * Creates a {@code AndroidViewModelFactory}
+         * Creates a {@code AndroidLivePresenterFactory}
          *
          * @param application an application to pass in {@link LivePresenter}
          */
-        public AndroidViewModelFactory(@NonNull Application application) {
+        public AndroidLivePresenterFactory(@NonNull Application application) {
             mApplication = application;
         }
 
         @NonNull
         @Override
         public <T extends LivePresenter> T create(@NonNull Class<T> modelClass) {
-            if (LivePresenter.class.isAssignableFrom(modelClass)) {
+            if (AppLivePresenter.class.isAssignableFrom(modelClass)) {
                 //noinspection TryWithIdenticalCatches
                 try {
                     return modelClass.getConstructor(Application.class).newInstance(mApplication);
