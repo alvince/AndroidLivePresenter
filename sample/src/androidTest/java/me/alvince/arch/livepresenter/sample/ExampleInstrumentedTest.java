@@ -1,4 +1,4 @@
-package me.alvince.arch.livepresenter;
+package me.alvince.arch.livepresenter.sample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

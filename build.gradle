@@ -1,6 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.kotlin_version = '1.3.10'
 
     repositories {
         google()
@@ -8,9 +9,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -26,10 +27,22 @@ task clean(type: Delete) {
 }
 
 ext {
+    cfg = [
+            versionCode: "$version_code" as int,
+            versionName: "$version_name"
+    ]
     libs = [
             androidLifecycle: "1.1.1",
             supportTest     : "1.0.2",
             junit           : "4.12",
             espresso        : "3.0.2"
+    ]
+    depends = [
+            supportCompat   : "com.android.support:appcompat-v7:${android_support_version}",
+            androidLifecycle: "android.arch.lifecycle:extensions:${libs.androidLifecycle}",
+            leakCanary      : "com.squareup.leakcanary:leakcanary-android:$depends_leak_canary",
+            //test
+            espressoCore    : "com.android.support.test.espresso:espresso-core:${libs.espresso}",
+            supportTest     : "com.android.support.test:runner:${libs.supportTest}"
     ]
 }
