@@ -9,11 +9,11 @@ import com.squareup.leakcanary.LeakCanary
  * @author alvince.zy@gmail.com
  */
 class SampleApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
 
-        if (!LeakCanary.isInAnalyzerProcess(this)) {
-            LeakCanary.install(this)
-        }
+        takeIf { !LeakCanary.isInAnalyzerProcess(this) }
+                ?.also { installLeakCanary(it) }
     }
 }
