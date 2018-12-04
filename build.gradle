@@ -39,9 +39,11 @@ ext {
     ]
     depends = [
             supportCompat   : "com.android.support:appcompat-v7:${android_support_version}",
+            supportV4       : "com.android.support:support-v4:${android_support_version}",
             androidLifecycle: "android.arch.lifecycle:extensions:${libs.androidLifecycle}",
             leakCanary      : "com.squareup.leakcanary:leakcanary-android:$depends_leak_canary",
             //test
+            junit           : "junit:junit:${libs.junit}",
             espressoCore    : "com.android.support.test.espresso:espresso-core:${libs.espresso}",
             supportTest     : "com.android.support.test:runner:${libs.supportTest}"
     ]

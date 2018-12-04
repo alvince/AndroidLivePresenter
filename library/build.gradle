@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-
-
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 27
+        versionCode cfg.versionCode
+        versionName cfg.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -21,15 +19,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
-    compileOnly "com.android.support:appcompat-v7:${android_support_version}"
-    compileOnly "com.android.support:support-v4:${android_support_version}"
-    compileOnly "android.arch.lifecycle:extensions:${libs.androidLifecycle}"
+    compileOnly "${depends.supportCompat}"
+    compileOnly "${depends.supportV4}"
+    compileOnly "${depends.androidLifecycle}"
 
-    testImplementation "junit:junit:${libs.junit}"
+    testImplementation "${depends.junit}"
     androidTestImplementation "com.android.support.test:runner:${libs.supportTest}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libs.espresso}"
 }

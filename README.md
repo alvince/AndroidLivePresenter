@@ -5,7 +5,10 @@ Android Live Presenter
     <img src="https://img.shields.io/badge/License-MIT-red.svg" alt="License" />
 </a>
 
-An android presenter bundle, with lifecycle observable that prevent leaks from context.
+An android presenter bundle, with lifecycle observable that prevent leaks from context.  
+
+参考 __Android-ViewModel__ 封装的 `Presenter` 组件  
+专注业务逻辑，自动处理生命周期的依赖，上下文对象销毁时自动释放 View 对象  
 
 ## LICENSE
 ```
