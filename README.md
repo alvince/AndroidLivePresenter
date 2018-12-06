@@ -19,9 +19,11 @@ An android presenter bundle, with lifecycle observable that prevent leaks from c
 ## 添加依赖
 
 ```Groovy
-implementation 'com.android.support:appcompat-v7:27.1.1'
-implementation 'android.arch.lifecycle:extensions:1.1.1'
-implementation 'me.alvince.android:android-live-presenter:0.1'
+dependencies {
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'me.alvince.android:android-live-presenter:0.1'
+}
 ```
 
 ## Sample
@@ -36,7 +38,7 @@ public class SamplePresenter extends LivePresenter<ISampleView> {
 
     @Override
     public void onCleared() {
-        // 视图销毁时清理
+        // 视图销毁时清理
         …
     }
 }
@@ -46,6 +48,7 @@ Kotlin
 
 ```Kotlin
 class SamplePresenter : LivePresenter<ISampleView>() {
+    …
 
     override fun onCleared() {
         …
