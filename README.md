@@ -72,7 +72,7 @@ public class SampleActivity extends AppCompatActivity implements ISampleView {
         super.onCreate(savedInstanceState);
         …
         mPresenter = LivePresenterProviders.of(this).get(SamplePresenter.class);
-        mPresenter.bindView(this);
+        mPresenter.bindViewport(this);
     }
 }
 ```
