@@ -15,6 +15,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.jfrog.bintray" version "1.8.3"
+}
+
 allprojects {
     repositories {
         google()
@@ -27,6 +31,9 @@ task clean(type: Delete) {
 }
 
 ext {
+    maven_group = "$m2_group"
+    maven_artifact = "$m2_artifact"
+
     cfg = [
             versionCode: "$version_code" as int,
             versionName: "$version_name"

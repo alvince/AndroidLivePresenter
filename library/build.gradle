@@ -1,4 +1,16 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 27
@@ -29,4 +41,94 @@ dependencies {
     testImplementation "${depends.junit}"
     androidTestImplementation "com.android.support.test:runner:${libs.supportTest}"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:${libs.espresso}"
+}
+
+version = "${cfg.versionName}"
+group = "$maven_group"
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    //archives javadocJar
+    archives sourcesJar
+}
+
+def group_id = group
+def artifact = "$maven_artifact"
+def libraryName = 'AndroidLivePresenter'
+def libraryDescription = 'A simple lifecycle observable presenter bundle on Android'
+def siteUrl = 'https://github.com/alvince/AndroidLivePresenter/'
+def gitUrl = 'https://github.com/alvince/AndroidLivePresenter.git'
+
+System.out.println(String.format("group: %s  artfact: %s", group, artifact))
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = 'android'
+        name = 'android-live-presenter'
+        userOrg = 'alvince-zy'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/alvince/AndroidLivePresenter.git'
+
+        version {
+            name = "$version_name"
+            desc = 'First publish on 0.1.0'
+            released = Calendar.getInstance().time
+            vcsTag = 'v0.1.0'
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId group_id
+                artifactId artifact
+
+                name libraryName
+                description libraryDescription
+                url siteUrl
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id properties.getProperty("bintray.user")
+                        name 'alvince'
+                        email 'alvince.zy@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
 }
