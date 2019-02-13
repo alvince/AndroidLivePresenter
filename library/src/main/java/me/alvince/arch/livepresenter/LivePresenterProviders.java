@@ -78,7 +78,7 @@ public class LivePresenterProviders {
         Application application = activity.getApplication();
         if (application == null) {
             throw new IllegalStateException("Your activity/fragment is not yet attached to "
-                    + "Application. You can't request ViewModel before onCreate call.");
+                    + "Application. You can't request LivePresenter before onCreate call.");
         }
         return application;
     }
@@ -86,7 +86,7 @@ public class LivePresenterProviders {
     private static Activity checkActivity(Fragment fragment) {
         Activity activity = fragment.getActivity();
         if (activity == null) {
-            throw new IllegalStateException("Can't create ViewModelProvider for detached fragment");
+            throw new IllegalStateException("Can't create LivePresenterProvider for detached fragment");
         }
         return activity;
     }

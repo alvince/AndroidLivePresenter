@@ -48,16 +48,16 @@ public class LivePresenterStore {
     }
 
     /**
-     * Check if current actived for observe relevant {@link LifecycleOwner}
+     * Check if current activated for observe relevant {@link LifecycleOwner}
      */
-    public boolean isActived() {
+    public boolean isActivated() {
         return mLifecycleSubscribed;
     }
 
     final void put(String key, LivePresenter presenter) {
-        LivePresenter oldViewModel = mMap.put(key, presenter);
-        if (oldViewModel != null) {
-            oldViewModel.onCleared();
+        LivePresenter oldPresenter = mMap.put(key, presenter);
+        if (oldPresenter != null) {
+            oldPresenter.onCleared();
         }
     }
 

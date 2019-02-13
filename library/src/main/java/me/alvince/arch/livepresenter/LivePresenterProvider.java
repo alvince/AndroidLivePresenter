@@ -38,7 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 public class LivePresenterProvider {
 
     /**
-     * Implementations of `Factory` interface are responsible to instantiate ViewModels.
+     * Implementations of `Factory` interface are responsible to instantiate LivePresenters.
      */
     interface Factory {
         /**
@@ -68,7 +68,7 @@ public class LivePresenterProvider {
     public <P extends LivePresenter> P get(@NonNull Class<P> presenterClass) {
         String canonicalName = presenterClass.getCanonicalName();
         if (canonicalName == null) {
-            throw new IllegalArgumentException("Local and anonymous classes can not be ViewModels");
+            throw new IllegalArgumentException("Local and anonymous classes can not be LivePresenters");
         }
         return get(DEFAULT_KEY + ":" + canonicalName, presenterClass);
     }

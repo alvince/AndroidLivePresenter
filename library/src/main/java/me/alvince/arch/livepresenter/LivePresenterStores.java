@@ -38,7 +38,7 @@ import java.util.Arrays;
  * Created by alvince on 2018/11/30
  *
  * @author alvince.zy@gmail.com
- * @version 0.1.0, 2018/12/4
+ * @version 0.1.1, 2019/2/13
  * @since 0.1.0
  */
 public class LivePresenterStores {
@@ -83,9 +83,12 @@ public class LivePresenterStores {
     }
 
     private static LivePresenterStore ofLifecycle(LifecycleOwner owner) {
-        LivePresenterStore store = new LivePresenterStore(owner);
-        sStoresArray.put(owner.hashCode(), store);
-        putInstance(owner.hashCode(), store);
+        int k = owner.hashCode();
+        LivePresenterStore store = sStoresArray.get(k);
+        if (store == null) {
+            store = new LivePresenterStore(owner);
+            putInstance(k, store);
+        }
         return store;
     }
 
@@ -120,7 +123,7 @@ public class LivePresenterStores {
             for (int i = 0; i < sStoresKeyArr.length; i++) {
                 int k = sStoresKeyArr[i];
                 LivePresenterStore store = sStoresArray.get(k);
-                if (store != null && !store.isActived()) {
+                if (store != null && !store.isActivated()) {
                     sStoresArray.remove(k);
                     sStoresKeyArr[i] = 0;
                     sGarbage = true;
