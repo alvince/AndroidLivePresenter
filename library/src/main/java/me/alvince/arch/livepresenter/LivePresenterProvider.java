@@ -149,7 +149,7 @@ public class LivePresenterProvider {
         @NonNull
         @Override
         public <T extends LivePresenter> T create(@NonNull Class<T> modelClass) {
-            if (AppLivePresenter.class.isAssignableFrom(modelClass)) {
+            if (LiveAppPresenter.class.isAssignableFrom(modelClass)) {
                 //noinspection TryWithIdenticalCatches
                 try {
                     return modelClass.getConstructor(Application.class).newInstance(mApplication);

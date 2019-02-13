@@ -10,11 +10,11 @@ import android.support.annotation.NonNull;
  * @version 0.1.0, 2018/11/29
  * @since 0.1.0
  */
-public class AppLivePresenter<V> extends LivePresenter<V> {
+public class LiveAppPresenter<V> extends LivePresenter<V> {
 
     private Application mApplication;
 
-    public AppLivePresenter(@NonNull Application application) {
+    public LiveAppPresenter(@NonNull Application application) {
         super();
         mApplication = application;
     }
