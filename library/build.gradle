@@ -90,9 +90,9 @@ bintray {
 
         version {
             name = "$version_name"
-            desc = 'First publish on 0.1.0'
+            desc = 'First publish on 0.1.1'
             released = Calendar.getInstance().time
-            vcsTag = 'v0.1.0'
+            vcsTag = 'v0.1.1'
         }
     }
 }
