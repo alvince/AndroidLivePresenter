@@ -38,10 +38,12 @@ import java.util.Arrays;
  * Created by alvince on 2018/11/30
  *
  * @author alvince.zy@gmail.com
- * @version 0.1.1, 2019/2/13
+ * @version 0.1.1, 2019/2/26
  * @since 0.1.0
  */
 public class LivePresenterStores {
+
+    private static final Object S_LOCK = LivePresenterStores.class;
 
     private static final long HANDLE_GC_DELAYED = 3000L;
 
@@ -84,38 +86,43 @@ public class LivePresenterStores {
 
     private static LivePresenterStore ofLifecycle(LifecycleOwner owner) {
         int k = owner.hashCode();
-        LivePresenterStore store = sStoresArray.get(k);
-        if (store == null) {
-            store = new LivePresenterStore(owner);
-            putInstance(k, store);
+        synchronized (S_LOCK) {
+            LivePresenterStore store = sStoresArray.get(k);
+            if (store == null) {
+                store = new LivePresenterStore(owner);
+                putInstance(k, store);
+            }
+            return store;
         }
-        return store;
     }
 
     private static void putInstance(int key, LivePresenterStore instance) {
-        int curSize = sStoresArray.size();
+        synchronized (S_LOCK) {
+            int curSize = sStoresArray.size();
+            int capacityNew = (int) (curSize * 1.5F);
 
-        // garbage clear
-        if (sGarbage) {
-            int[] swap = new int[(int) (curSize * 1.5F)];
-            int pos = 0;
-            for (int k : sStoresKeyArr) {
-                LivePresenterStore s = sStoresArray.get(k);
-                if (s != null) {
-                    swap[pos++] = k;
+            // garbage clear
+            if (sGarbage) {
+                int[] swap = new int[capacityNew];
+                int pos = 0;
+                for (int k : sStoresKeyArr) {
+                    LivePresenterStore s = sStoresArray.get(k);
+                    if (s != null) {
+                        swap[pos++] = k;
+                    }
                 }
+                sStoresKeyArr = swap;
+                sGarbage = false;
             }
-            sStoresKeyArr = swap;
-            sGarbage = false;
-        }
 
-        // Expand capacity
-        if (sStoresKeyArr.length == curSize) {
-            sStoresKeyArr = Arrays.copyOf(sStoresKeyArr, (int) (curSize * 1.5F));
-        }
+            // Expand capacity
+            if (sStoresKeyArr.length == curSize) {
+                sStoresKeyArr = Arrays.copyOf(sStoresKeyArr, capacityNew);
+            }
 
-        sStoresArray.put(key, instance);
-        sStoresKeyArr[curSize] = key;
+            sStoresArray.put(key, instance);
+            sStoresKeyArr[curSize] = key;
+        }
     }
 
     private static void performGC() {
